@@ -1,0 +1,57 @@
+# vim:ts=8:sw=8:et
+general {
+        output_format = "i3bar"
+        colors = true
+        interval = 5
+}
+
+order += "disk /"
+order += "wireless wls1"
+order += "ethernet enp0s25"
+order += "battery 0"
+order += "cpu_temperature 0"
+order += "load"
+order += "tztime local"
+
+wireless wls1 {
+        #format_up = "W: (%quality at %essid, %bitrate) %ip"
+        format_up = "W: (%quality at %essid) %ip"
+        format_down = "W: down"
+}
+
+ethernet enp0s25 {
+        format_up = "E: %ip (%speed)"
+        format_down = "E: down"
+}
+
+battery 0 {
+        #format = "%status %percentage %remaining %emptytime"
+        format = "%status %percentage %remaining"
+        format_down = "No battery"
+        status_chr = "CHR"
+        status_bat = "BAT"
+        status_unk = "UNK"
+        status_full = "FUL"
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+tztime local {
+        #format = "%Y-%m-%d %H:%M:%S"
+        #format = "%H:%M:%S %d.%m.%Y"
+        format = "%d.%m.%Y %H:%M:%S"
+}
+
+load {
+        format = "%1min"
+}
+
+cpu_temperature 0 {
+        format = "T: %degrees °C"
+        max_threshold = 70
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp2_input"
+}
+
+disk "/" {
+        format = "/ %avail"
+}

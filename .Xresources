@@ -1,0 +1,42 @@
+URxvt.intensityStyles: false
+URxvt.font: xft:monospace:size=10
+URxvt.letterSpace: 0
+URxvt.scrollBar: false
+URxvt.cursorColor: white
+
+URxvt.secondaryScreen: 1
+URxvt.secondaryScroll: 0
+
+URxvt.secondaryWheel: 1
+
+URxvt*termName: rxvt
+URxvt.perl-ext-common: default,matcher
+!!URxvt.resize-font.smaller: C-Down
+!!URxvt.resize-font.bigger: C-Up
+
+URxvt.url-launcher: qutebrowser
+
+URxvt.matcher.button: 1
+
+URxvt*background: rgba:0000/0000/0200/c800
+URxvt*foreground: white
+
+URxvt*depth: 32
+
+URxvt*color0: black
+URxvt*color1: red3
+URxvt*color2: green3
+URxvt*color3: yellow3
+URxvt*color4: blue2
+URxvt*color5: magenta3
+URxvt*color6: cyan3
+URxvt*color7: gray90
+URxvt*color8: gray50
+URxvt*color9: red
+URxvt*color10: green
+URxvt*color11: yellow
+URxvt*color12: blue
+URxvt*color13: magenta
+URxvt*color14: cyan
+URxvt*color15: white
+

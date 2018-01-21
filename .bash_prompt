@@ -1,0 +1,61 @@
+function getgitbranch {
+#	if [ -d "$1/.git" ]; then
+#		echo -n " (git)"
+#	else
+#		if [ "$1" == '/' ]; then
+#			echo -n ''
+#		else
+#			echo -n "$(custombprompt $(dirname $1))"
+#		fi
+#	fi
+
+	#date +%T
+	# https://coderwall.com/p/fasnya/add-git-branch-name-to-bash-prompt
+	NCH=`git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'`
+
+	if [ -z $NCH ]; then
+		echo -n ''
+	else
+		echo -n "$NCH"
+	fi
+}
+
+function issudoactive {
+	return 1
+
+	if sudo -n true 2>/dev/null; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function getexitcode {
+	CODE=$?
+	if [ "$CODE" -eq "0" ]; then
+		echo -n ''
+	else
+		echo -n "$CODE "
+	fi
+}
+
+# http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html
+CYAN='\[\033[0;36m\]'
+GREEN='\[\033[0;32m\]'
+LPURPLE='\[\033[1;35m\]'
+RED='\[\033[0;31m\]'
+RSTCOL='\[\033[0m\]'
+
+function getifsudo {
+	if issudoactive; then
+		echo -n '!'
+	fi
+}
+
+function getifnotsudo {
+	if ! issudoactive; then
+		echo -n '@'
+	fi
+}
+
+export PS1="$RED"'$(getexitcode)'"$RSTCOL$CYAN\u$RSTCOL$RED"'$(getifsudo)'"$RSTCOL"'$(getifnotsudo)'"$GREEN\H$RSTCOL \w$LPURPLE"'$(getgitbranch $PWD)'"$RSTCOL\$ "
