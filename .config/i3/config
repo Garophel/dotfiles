@@ -1,8 +1,11 @@
 #vim: filetype=i3
 
+# A lot of this is 'borrowed' from Luke:
+# https://github.com/LukeSmithxyz/voidrice
+
 set $mod Mod4
 
-set $term urxvt
+set $term --no-startup-id urxvt
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -16,12 +19,19 @@ for_window [class="^.*"] border pixel 1
 for_window [window_role="gimp-dock"] floating disable; move left; resize shrink width 50 px or 50ppt
 for_window [window_role="gimp-toolbox"] floating disable; move left; resize grow width 30 px or 30ppt
 
-#Dropdown
+# Dropdown
 for_window [instance="dropdown"] floating enable
 for_window [instance="dropdown"] resize set 625 400
 for_window [instance="dropdown"] move scratchpad
 for_window [instance="dropdown"] border pixel 3
-exec --no-startup-id $term -n dropdown -e tmux
+exec --no-startup-id st -n dropdown -e tmux
+
+# Math window / calculator
+for_window [instance="math"] floating enable
+for_window [instance="math"] resize set 625 400
+for_window [instance="math"] move scratchpad
+for_window [instance="math"] border pixel 3
+exec --no-startup-id st -n math -f mono:pixelsize=24 -e R -q
 
 set $gaps_inner 5
 set $gaps_outer 5
@@ -47,7 +57,7 @@ floating_modifier $mod
 #bindsym F1                   exec --no-startup-id echo "no help" > /dev/null
 
 bindsym $mod+Return          exec $term
-bindsym $mod+Shift+Return    exec $term -e ranger
+bindsym $mod+Shift+Return    exec st -e ranger
 
 bindsym $mod+space           focus mode_toggle
 bindsym $mod+Shift+space     floating toggle
@@ -127,6 +137,8 @@ bindsym $mod+Shift+u         resize grow height 10 px or 10 ppt
 #bindsym $mod+o
 bindsym $mod+Shift+o         resize grow width 10 px or 10 ppt
 
+bindsym $mod+period          [instance="math"] scratchpad show; [instance="math"] move position center
+
 bindsym $mod+Prior           exec --no-startup-id mpc volume +5
 bindsym $mod+Next            exec --no-startup-id mpc volume -5
 
@@ -141,7 +153,8 @@ bindsym $mod+Up              focus up
 bindsym $mod+Right           focus right
 
 bindsym $mod+XF86Back        workspace prev
-BINDSYM $mod+XF86Forward     workspace next
+bindsym $mod+XF86Forward     workspace next
+bindsym $mod+Tab             workspace back_and_forth
 
 bindsym XF86ScreenSaver      exec i3lock -c 333355
 bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%"

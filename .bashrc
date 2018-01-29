@@ -28,6 +28,7 @@ alias pss='pass show -c'
 alias lock='i3lock -c 333355'
 alias sshagent='eval `ssh-agent`'
 alias btoff='sudo rfkill block bluetooth'
+alias htmlpreview='w3m -T text/html'
 
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
@@ -46,6 +47,10 @@ function setbg {
 
 function img {
 	feh -g 640x480 -d "$1"
+}
+
+function mvhere {
+	mv $@ `pwd`
 }
 
 # yes, I'm that lazy
