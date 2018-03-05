@@ -16,6 +16,8 @@
 (setq make-backup-file nil)
 (setq auto-save-default nil)
 
+(setq display-time-24hr-format t)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (defvar my-term-shell "/bin/bash")
@@ -40,6 +42,34 @@
   :ensure t
   :init (rainbow-mode 1))
 
+(use-package rainbow-delimiters
+  :ensure t
+  :init (rainbow-delimiters-mode 1))
+
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents . 10)))
+  (setq dashboard-banner-logo-title "Hello!"))
+
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+  (setq powerline-default-separator (quote arrow))
+  (spaceline-spacemacs-theme))
+
+(use-package diminish
+  :ensure t
+  :init
+  (diminish 'which-key-mode))
+
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -59,7 +89,7 @@
     ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(package-selected-packages
    (quote
-    (rainbow-mode spacemacs-theme which-key use-package))))
+    (diminish company spaceline rainbow-delimiters rainbow-delimeters dashboard rainbow-mode spacemacs-theme which-key use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
