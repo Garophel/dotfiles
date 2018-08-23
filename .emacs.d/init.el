@@ -67,6 +67,8 @@
 (define-key evil-normal-state-map (kbd "RET") 'ido-switch-buffer)
 (define-key evil-normal-state-map (kbd "<C-return>") 'ibuffer)
 
+;(evil-ex-define-cmd "q[uit]" (lambda () (kill-buffer (current-buffer))))
+
 (use-package avy
   :ensure t
   :init
@@ -76,6 +78,11 @@
   :ensure t
   :init
   (add-hook 'after-init-hook #'global-flycheck-mode))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode t))
 
 (use-package yasnippet
   :ensure t
@@ -89,6 +96,7 @@
     :config
     (setq eclim-eclipse-dirs '("~/eclipse"))
     (setq eclim-executable "~/eclipse/eclim")
+    (setq eclimd-default-workspace "~/eclipse-workspace")
     :init
     (setq eclimd-autostart t)
     (add-hook 'java-mode-hook (lambda () (eclim-mode t))))
@@ -106,7 +114,7 @@
   (elscreen-start)
   (define-key evil-normal-state-map (kbd "C-w t") 'elscreen-create) ;create tab
   (define-key evil-normal-state-map (kbd "C-w x") 'elscreen-kill)   ;kill tab
-  )
+  (add-hook 'after-init-hook (lambda () (let (i) (dotimes (i 3 nil) (elscreen-create))) (elscreen-goto 0))))
 
 (require 'elscreen)
 (defun my/jump-or-prev-tab (arg)
@@ -123,10 +131,19 @@
       (elscreen-next)
     (elscreen-goto arg)))
 
-(global-set-key (kbd "C-c p") 'my/jump-or-prev-tab) ;previous tab
-(global-set-key (kbd "C-c n") 'my/jump-or-next-tab) ;next tab
-(define-key evil-normal-state-map "gT" 'my/jump-or-prev-tab)        ;previous tab
-(define-key evil-normal-state-map "gt" 'my/jump-or-next-tab)        ;next tab
+(defun my/dired-in-new-tab ()
+  "Open dired in new tab."
+  (interactive)
+  (elscreen-create)
+  (dired "~/"))
+
+(global-set-key (kbd "C-c k") 'my/jump-or-prev-tab)          ;previous tab
+(global-set-key (kbd "C-c j") 'my/jump-or-next-tab)          ;next tab
+(global-set-key (kbd "C-c f") 'my/dired-in-new-tab)          ;find file in tab
+(global-set-key (kbd "C-c t") 'elscreen-create)              ;create tab
+(global-set-key (kbd "C-c x") 'elscreen-kill)                ;kill tab
+(define-key evil-normal-state-map "gT" 'my/jump-or-prev-tab) ;previous tab
+(define-key evil-normal-state-map "gt" 'my/jump-or-next-tab) ;next tab
 
 (use-package evil-surround
   :ensure t
@@ -206,6 +223,10 @@
   :ensure t
   :mode "\\.rs\\'")
 
+(use-package csharp-mode
+  :ensure t
+  :mode "\\.cs$")
+
 ;; (use-package lsp-mode
 ;;   :ensure t
 ;;   :init
@@ -223,10 +244,16 @@
 
 (use-package racer
   :ensure t
+  :config
+  (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
   :init
   (require 'rust-mode)
   (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode))
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'racer-mode-hook (lambda ()
+                               (setq company-idle-delay nil)
+                               (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+                               (setq company-tooltip-align-annotations t))))
 
 (use-package company-irony
   :ensure t
@@ -274,7 +301,7 @@
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq-local tab-width 4)
-            (setq-local indent-tabs-mode t)
+            (setq-local indent-tabs-mode nil)
             (setq-local c-basic-offset 4)))
 
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
@@ -312,11 +339,30 @@
     (interactive)
     (kill-buffer (current-buffer)))
 
+(defun my/note-name (&optional name)
+  "Create name for note, with optional NAME."
+  (concat
+   (format-time-string "%Y-%m-%d_%H.%M.%S")
+   (when name (concat "-" name))))
+
+(defun my/note-create ()
+  "Create a new note."
+  (interactive)
+  nil)
+
+(defun my/note-open ()
+  "Open a previously created note."
+  (interactive)
+  nil)
+
 (global-set-key (kbd "C-c c e") 'my/open-emacs-config)
 (global-set-key (kbd "C-c c i") 'my/open-i3-config)
 (global-set-key (kbd "C-c c p") 'my/open-polybar-config)
 (global-set-key (kbd "C-c c v") 'my/open-vim-config)
 (global-set-key (kbd "C-c c b") 'my/open-bash-config)
+
+(global-set-key (kbd "C-c n n") 'my/note-create)
+(global-set-key (kbd "C-c n o") 'my/note-open)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x k") 'my/kill-curr-buffer)
@@ -350,13 +396,13 @@
  '(linum-relative-format "%3s ")
  '(package-selected-packages
    (quote
-    (avy company-emacs-eclim eclim lsp-rust rust-mode company-lsp flycheck elscreen company-irony evil-matchit evil-args evil-commentary linum-relative evil-surround diminish company spaceline rainbow-delimiters rainbow-delimeters dashboard rainbow-mode spacemacs-theme which-key use-package))))
+    (csharp-mode projectile avy company-emacs-eclim eclim lsp-rust rust-mode company-lsp flycheck elscreen company-irony evil-matchit evil-args evil-commentary linum-relative evil-surround diminish company spaceline rainbow-delimiters rainbow-delimeters dashboard rainbow-mode spacemacs-theme which-key use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "SRC" :family "Hack"))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "SRC" :family "Hack"))))
  '(elscreen-tab-background-face ((t (:background "#2A2A31"))))
  '(elscreen-tab-control-face ((t (:background "#5A4F76" :foreground "black"))))
  '(elscreen-tab-current-screen-face ((t (:background "#CAAFFF" :foreground "black"))))
