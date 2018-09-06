@@ -3,6 +3,7 @@
 # A lot of this is 'borrowed' from Luke:
 # https://github.com/LukeSmithxyz/voidrice
 
+set $pasink 1
 set $mod Mod4
 
 set $term --no-startup-id urxvt
@@ -15,22 +16,34 @@ font pango:Hack 10
 # Disable window titles
 for_window [class="^.*"] border pixel 1
 
+# Make mpv window with title "float player"
+for_window [title="float player" class="mpv"] floating enable, \
+                                              resize set 1280 720, \
+                                              border pixel 3, \
+                                              move scratchpad, \
+                                              scratchpad show, \
+                                              move position center
+
 #for_window [class="Gimp"] move workspace $ws5
-for_window [window_role="gimp-dock"] floating disable; move left; resize shrink width 50 px or 50ppt
-for_window [window_role="gimp-toolbox"] floating disable; move left; resize grow width 30 px or 30ppt
+for_window [window_role="gimp-dock"] floating disable, \
+                                     move left, \
+                                     resize shrink width 50 px or 50ppt
+for_window [window_role="gimp-toolbox"] floating disable, \
+                                        move left, \
+                                        resize grow width 30 px or 30ppt
 
 # Dropdown
-for_window [instance="dropdown"] floating enable
-for_window [instance="dropdown"] resize set 625 400
-for_window [instance="dropdown"] move scratchpad
-for_window [instance="dropdown"] border pixel 3
+for_window [instance="dropdown"] floating enable, \
+                                 resize set 625 400, \
+                                 move scratchpad, \
+                                 border pixel 3
 exec --no-startup-id st -n dropdown -e tmux
 
 # Math window / calculator
-for_window [instance="math"] floating enable
-for_window [instance="math"] resize set 625 400
-for_window [instance="math"] move scratchpad
-for_window [instance="math"] border pixel 3
+for_window [instance="math"] floating enable, \
+                             resize set 626 401, \
+                             move scratchpad, \
+                             border pixel 3
 exec --no-startup-id st -n math -f mono:pixelsize=24 -e R -q
 
 set $gaps_inner 5
@@ -68,6 +81,12 @@ bindsym $mod+Shift+space     floating toggle
 bindsym $mod+q               kill
 bindsym $mod+Shift+q         kill
 
+bindsym $mod+v               [title="float player" class="mpv"] \
+                             scratchpad show, \
+                             move position center, \
+                             resize set 1280 720
+bindsym $mod+Shift+v         mode "mkeys"
+
 #bindsym $mod+b
 bindsym $mod+Shift+b         exec --no-startup-id killall -SIGKILL qutebrowser
 
@@ -83,7 +102,7 @@ bindsym $mod+n               split v
 bindsym $mod+f               exec waterfox
 bindsym $mod+Shift+f         fullscreen toggle
 
-#bindsym $mod+s              layout stacking
+#bindsym $mod+s               exec --no-startup-id ~/scripts/screenres.sh
 #bindsym $mod+Shift+s
 
 #bindsym $mod+w              layout tabbed
@@ -98,7 +117,7 @@ bindsym $mod+Shift+f         fullscreen toggle
 #bindsym $mod+c
 bindsym $mod+Shift+c         reload
 
-#bindsym $mod+r              mode "resize"
+bindsym $mod+r               exec --no-startup-id ~/scripts/screenres.sh
 bindsym $mod+Shift+r         restart
 
 bindsym $mod+e               exec --no-startup-id emacs
@@ -134,13 +153,18 @@ bindsym $mod+Shift+l         move right
 #bindsym $mod+y
 bindsym $mod+Shift+y         resize shrink width 10 px or 10 ppt
 
-bindsym $mod+u               [instance="dropdown"] scratchpad show; [instance="dropdown"] move position center
+bindsym $mod+u               [instance="dropdown"] \
+                             scratchpad show, \
+                             move position center, \
+                             resize set 626 401
 bindsym $mod+Shift+u         resize grow height 10 px or 10 ppt
 
 #bindsym $mod+o
 bindsym $mod+Shift+o         resize grow width 10 px or 10 ppt
 
-bindsym $mod+period          [instance="math"] scratchpad show; [instance="math"] move position center
+bindsym $mod+period          [instance="math"] \
+                             scratchpad show, \
+                             move position center
 
 bindsym $mod+Prior           exec --no-startup-id mpc volume +5
 bindsym $mod+Next            exec --no-startup-id mpc volume -5
@@ -160,9 +184,9 @@ bindsym $mod+XF86Forward     workspace next
 bindsym $mod+Tab             workspace back_and_forth
 
 bindsym XF86ScreenSaver      exec i3lock -c 333355
-bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%"
-bindsym XF86AudioLowerVolume exec --no-startup-id "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 -5%"
-bindsym XF86AudioMute        exec --no-startup-id "pactl set-sink-mute 0 toggle"
+bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink +5%"
+bindsym XF86AudioLowerVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink -5%"
+bindsym XF86AudioMute        exec --no-startup-id "pactl set-sink-mute $pasink toggle"
 bindsym XF86AudioPlay        exec --no-startup-id mpc toggle
 bindsym XF86AudioStop        exec --no-startup-id mpc stop
 bindsym XF86AudioNext        exec --no-startup-id mpc next
@@ -170,7 +194,7 @@ bindsym XF86AudioPrev        exec --no-startup-id mpc prev
 
 # Start i3bar to display a workspace bar (plus the system information i3status finds out, if available)
 #bar {
-#	status_command i3status
+#    status_command i3status
 #}
 
 # ugly zone below
@@ -201,24 +225,35 @@ bindsym $mod+Shift+0 move container to workspace 10
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-	# These bindings trigger as soon as you enter the resize mode
+    # These bindings trigger as soon as you enter the resize mode
 
-	# Pressing left will shrink the window’s width.
-	# Pressing right will grow the window’s width.
-	# Pressing up will shrink the window’s height.
-	# Pressing down will grow the window’s height.
-	bindsym h resize shrink width 10 px or 10 ppt
-	bindsym j resize grow height 10 px or 10 ppt
-	bindsym k resize shrink height 10 px or 10 ppt
-	bindsym l resize grow width 10 px or 10 ppt
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
-	# same bindings, but for the arrow keys
-	bindsym Left resize shrink width 10 px or 10 ppt
-	bindsym Down resize grow height 10 px or 10 ppt
-	bindsym Up resize shrink height 10 px or 10 ppt
-	bindsym Right resize grow width 10 px or 10 ppt
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-	# back to normal: Enter or Escape
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# mousekeys
+mode "mkeys" {
+    bindsym Shift+h exec --no-startup-id ~/scripts/mouse-keys.sh jmp_left
+    bindsym Shift+j exec --no-startup-id ~/scripts/mouse-keys.sh jmp_down
+    bindsym Shift+k exec --no-startup-id ~/scripts/mouse-keys.sh jmp_up
+    bindsym Shift+l exec --no-startup-id ~/scripts/mouse-keys.sh jmp_right
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
