@@ -1,0 +1,60 @@
+# Update every 5 seconds by default
+interval=5
+markup=pango
+color=#FFFFFF
+
+#[template]
+#command=~/scripts/i3/template
+
+#[weather]
+#command=~/scripts/i3/weather
+#interval=3600
+
+[mpd]
+command=~/scripts/i3/mpd
+interval=5
+signal=2
+
+[volume]
+command=~/scripts/i3/volume
+interval=once
+signal=1
+
+[newsboat]
+command=~/scripts/i3/newsboat
+interval=60
+
+[disk_usage]
+command=~/scripts/i3/disk_usage
+interval=60
+
+[mem_usage]
+command=~/scripts/i3/mem_usage
+interval=10
+
+[cpu_usage]
+command=~/scripts/i3/cpu_usage
+interval=persist
+
+[wifi]
+command=~/scripts/i3/wifi
+markup=none
+
+[battery]
+command=~/scripts/i3/battery
+interval=10
+
+[cpu_temp]
+command=~/scripts/i3/cpu_temp
+
+[date]
+command=date +📅%d.%m.%Y
+interval=60
+
+[time]
+command=date +🕑%T
+
+#[test]
+#command=echo '<span foreground="red">😃 </span>'
+
+#end of file (to ensure there is a newline after this line)
