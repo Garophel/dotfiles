@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+icon_discharging=🔋
+icon_charging=🔌
+icon_full=⚡
+
+status=$(acpi | sed s/,//g \
+        | awk '{print toupper(substr($3,0,3)) $4}' \
+        | sed -e s/UNK/$icon_full/ \
+              -e s/CHA/$icon_charging/ \
+              -e s/DIS/$icon_discharging/ \
+              -e s/FUL/$icon_full/)
+
+full_text "$status"
+
+#short_text 'short here'
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+# Uncomment to exit with urgent status
+#urgent

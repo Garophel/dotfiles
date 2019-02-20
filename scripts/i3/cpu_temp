@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+temp_warn=70
+
+icon_temp=🌡️
+
+status=$(sensors | awk '/^Package id 0:/{print substr($4,2)}')
+full_text "$icon_temp$status"
+
+#short_text 'short here'
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+if [ ${status:0:2} -ge $temp_warn ]; then
+    urgent
+fi
+
+# Uncomment to exit with urgent status
+#urgent

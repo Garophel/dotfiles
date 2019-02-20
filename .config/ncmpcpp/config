@@ -1,0 +1,8 @@
+visualizer_output_name = toggle_visualizer
+visualizer_type = wave_filled
+visualizer_in_stereo = yes
+visualizer_sync_interval = 10
+
+playlist_disable_highlight_delay = 0
+
+centered_cursor = yes

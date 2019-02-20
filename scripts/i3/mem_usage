@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+icon_mem=🧠
+
+status=$(free | awk '/Mem:/{print 100-int($7/$2*100) "%"}')
+full_text "$icon_mem$status"
+
+short_text ''
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+# Uncomment to exit with urgent status
+#urgent

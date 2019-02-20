@@ -14,11 +14,16 @@ else
 	export PS1='\u@\H \w\$ '
 fi
 
+# Rust
 [ -f ~/.cargo/env ] && source ~/.cargo/env
+
+# Scripts
+PATH=$PATH:~/scripts/bin
 
 export RANGER_LOAD_DEFAULT_RC='FALSE'
 export VISUAL='vim'
 
+alias o='xdg-open'
 alias v='vim'
 alias ls='ls --color=auto'
 alias l='ls'
@@ -34,12 +39,13 @@ alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
 function setbg {
 	if [ -z $1 ]; then
-		echo 'No image given, cancelling'
+		echo 'No image given, resetting the current background'
+		feh --bg-scale ~/.wallpaper/bg.png
 	else
 		mv ~/.wallpaper/bg.png ~/.wallpaper/bg.png.old
 		cp "$1" ~/.wallpaper/bg.png
 		if ! feh --bg-scale ~/.wallpaper/bg.png; then
-			mv ~/.wallpaper/bg.png.old ~/.wallpaper/bg.png 
+			mv ~/.wallpaper/bg.png.old ~/.wallpaper/bg.png
 			feh --bg-scale ~/.wallpaper/bg.png
 		fi
 	fi

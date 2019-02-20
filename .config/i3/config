@@ -8,6 +8,10 @@ set $mod Mod4
 
 set $term --no-startup-id urxvt
 
+# Gaps for i3-gaps
+set $gaps_inner 10
+set $gaps_outer 25
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 #font pango:DejaVu Sans Mono 8
@@ -16,6 +20,17 @@ font pango:Hack 10
 # Disable window titles
 for_window [class="^.*"] border pixel 1
 
+# class                 border  backgr. text    indicator child_border
+client.focused          #4c7899 #285577 #ffffff #ff00ff   #ff0000
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+
+client.background       #ffffff
+
+#for_window [window_role="qutebrowser"] move to workspace 1
+
 # Make mpv window with title "float player"
 for_window [title="float player" class="mpv"] floating enable, \
                                               resize set 1280 720, \
@@ -23,6 +38,13 @@ for_window [title="float player" class="mpv"] floating enable, \
                                               move scratchpad, \
                                               scratchpad show, \
                                               move position center
+
+for_window [title="ytcorner" class="mpv"] floating enable, \
+	   		  	  	  resize set 256 144, \
+					  move scratchpad, \
+					  scratchpad show, \
+					  border pixel 1, \
+					  move position 1110 20
 
 #for_window [class="Gimp"] move workspace $ws5
 for_window [window_role="gimp-dock"] floating disable, \
@@ -37,7 +59,7 @@ for_window [instance="dropdown"] floating enable, \
                                  resize set 625 400, \
                                  move scratchpad, \
                                  border pixel 3
-exec --no-startup-id st -n dropdown -e tmux
+exec --no-startup-id st -n dropdown -e tmux new-session -A -s dropdown
 
 # Math window / calculator
 for_window [instance="math"] floating enable, \
@@ -45,9 +67,6 @@ for_window [instance="math"] floating enable, \
                              move scratchpad, \
                              border pixel 3
 exec --no-startup-id st -n math -f mono:pixelsize=24 -e R -q
-
-set $gaps_inner 5
-set $gaps_outer 5
 
 gaps inner $gaps_inner
 gaps outer $gaps_outer
@@ -58,11 +77,14 @@ exec --no-startup-id feh --bg-scale ~/.wallpaper/bg.png
 # Compton
 exec --no-startup-id compton -GC
 
-# Polybar
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+# Polybar (disabled, switched back to i3bar with i3blocks)
+#exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # nm-applet
 exec --no-startup-id nm-applet
+
+# Dunst
+exec --no-startup-id dunst
 
 # xmodmap
 exec --no-startup-id xmodmap ~/.Xmodmap
@@ -71,6 +93,9 @@ exec --no-startup-id xmodmap ~/.Xmodmap
 floating_modifier $mod
 
 #bindsym F1                   exec --no-startup-id echo "no help" > /dev/null
+
+bindsym $mod+Escape          exec --no-startup-id mupdf ~/uni/lukkari.pdf
+bindsym $mod+section         exec --no-startup-id ~/scripts/bin/matikka.sh
 
 bindsym $mod+Return          exec $term
 bindsym $mod+Shift+Return    exec st -e ranger
@@ -81,23 +106,30 @@ bindsym $mod+Shift+space     floating toggle
 bindsym $mod+q               kill
 bindsym $mod+Shift+q         kill
 
-bindsym $mod+v               [title="float player" class="mpv"] \
+bindsym $mod+v               [title="ytcorner" class="mpv"] \
                              scratchpad show, \
-                             move position center, \
-                             resize set 1280 720
+                             resize set 1280 720, \
+                             move position center
 bindsym $mod+Shift+v         mode "mkeys"
 
-#bindsym $mod+b
+bindsym $mod+b               exec --no-startup-id st -e newsboat
 bindsym $mod+Shift+b         exec --no-startup-id killall -SIGKILL qutebrowser
+
+bindsym $mod+p               exec --no-startup-id ~/scripts/bin/dmenu_plot.sh
+#bindsym $mod+Shift+p
 
 bindsym $mod+d               exec dmenu_run
 #bindsym $mod+Shift+d
 
-bindsym $mod+m               split h
-#bindsym $mod+Shift+m
+#bindsym $mod+m               split h
+# bindsym $mod+Shift+m         workspace 1; exec --no-startup-id qutebrowser "http://pna.fi/tay"
+bindsym $mod+Shift+m         workspace 1; exec --no-startup-id surf "http://pna.fi/tay"
 
-bindsym $mod+n               split v
+bindsym $mod+n               split toggle
 #bindsym $mod+Shift+n
+
+bindsym $mod+t               split toggle
+#bindsym $mod+Shift+t
 
 bindsym $mod+f               exec waterfox
 bindsym $mod+Shift+f         fullscreen toggle
@@ -105,7 +137,10 @@ bindsym $mod+Shift+f         fullscreen toggle
 #bindsym $mod+s               exec --no-startup-id ~/scripts/screenres.sh
 #bindsym $mod+Shift+s
 
-#bindsym $mod+w              layout tabbed
+bindsym $mod+w               [title="ytcorner" class="mpv"] \
+					         scratchpad show, \
+	   		  	  	         resize set 256 144, \
+					         move position 1110 20
 #bindsym $mod+Shift+w
 
 #bindsym $mod+e              layout toggle split
@@ -124,7 +159,7 @@ bindsym $mod+e               exec --no-startup-id emacs
 bindsym $mod+Shift+e         exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 bindsym $mod+a               exec pavucontrol
-#bindsym $mod+Shift+a
+bindsym $mod+Shift+a         exec --no-startup-id arandr
 
 bindsym $mod+g               gaps outer current set $gaps_outer; gaps inner current set $gaps_inner
 bindsym $mod+Shift+g         gaps outer current set 0; gaps inner current set 0
@@ -156,7 +191,8 @@ bindsym $mod+Shift+y         resize shrink width 10 px or 10 ppt
 bindsym $mod+u               [instance="dropdown"] \
                              scratchpad show, \
                              move position center, \
-                             resize set 626 401
+                             resize set 626 401; \
+			                 exec --no-startup-id bash ~/scripts/launch_dropdown.sh
 bindsym $mod+Shift+u         resize grow height 10 px or 10 ppt
 
 #bindsym $mod+o
@@ -166,8 +202,10 @@ bindsym $mod+period          [instance="math"] \
                              scratchpad show, \
                              move position center
 
-bindsym $mod+Prior           exec --no-startup-id mpc volume +5
-bindsym $mod+Next            exec --no-startup-id mpc volume -5
+#bindsym $mod+Prior           exec --no-startup-id mpc volume +5
+#bindsym $mod+Next            exec --no-startup-id mpc volume -5
+bindsym $mod+Prior           exec --no-startup-id ~/scripts/util/player-ctrl.sh vol-up
+bindsym $mod+Next            exec --no-startup-id ~/scripts/util/player-ctrl.sh vol-down
 
 bindsym Print                exec --no-startup-id scrot --silent '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
 bindsym Shift+Print          exec --no-startup-id scrot --silent --select '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
@@ -184,13 +222,20 @@ bindsym $mod+XF86Forward     workspace next
 bindsym $mod+Tab             workspace back_and_forth
 
 bindsym XF86ScreenSaver      exec i3lock -c 333355
-bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink +5%"
-bindsym XF86AudioLowerVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink -5%"
-bindsym XF86AudioMute        exec --no-startup-id "pactl set-sink-mute $pasink toggle"
-bindsym XF86AudioPlay        exec --no-startup-id mpc toggle
-bindsym XF86AudioStop        exec --no-startup-id mpc stop
-bindsym XF86AudioNext        exec --no-startup-id mpc next
-bindsym XF86AudioPrev        exec --no-startup-id mpc prev
+#bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink +5%"
+#bindsym XF86AudioLowerVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink -5%"
+#bindsym XF86AudioMute        exec --no-startup-id "pactl set-sink-mute $pasink toggle"
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/scripts/util/volume-ctrl.sh up
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/scripts/util/volume-ctrl.sh down
+bindsym XF86AudioMute        exec --no-startup-id ~/scripts/util/volume-ctrl.sh mute
+#bindsym XF86AudioPlay        exec --no-startup-id mpc toggle
+#bindsym XF86AudioStop        exec --no-startup-id mpc stop
+#bindsym XF86AudioNext        exec --no-startup-id mpc next
+#bindsym XF86AudioPrev        exec --no-startup-id mpc prev
+bindsym XF86AudioPlay        exec --no-startup-id ~/scripts/util/player-ctrl.sh toggle
+bindsym XF86AudioStop        exec --no-startup-id ~/scripts/util/player-ctrl.sh stop
+bindsym XF86AudioNext        exec --no-startup-id ~/scripts/util/player-ctrl.sh next
+bindsym XF86AudioPrev        exec --no-startup-id ~/scripts/util/player-ctrl.sh prev
 
 # Start i3bar to display a workspace bar (plus the system information i3status finds out, if available)
 #bar {
@@ -256,4 +301,21 @@ mode "mkeys" {
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
+}
+
+bar {
+    colors {
+        background #2211007f
+        statusline #ffffffff
+        separator  #aa8800ff
+        focused_workspace  #ffdd88 #9f5f00af #ffffff
+        active_workspace   #ffdd88 #9f5f00af #ffffff
+        inactive_workspace #aa8844 #9f5f007f #ffffff
+        urgent_workspace   #ff0000 #9f5f00ff #ff0000
+    }
+
+    font pango:monospace 9
+    position top
+    status_command i3blocks
+    i3bar_command i3bar -t
 }

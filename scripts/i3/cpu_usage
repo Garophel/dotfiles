@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+interval=3
+icon_cpu=📊
+
+while true; do
+    procstat=$(grep 'cpu ' /proc/stat)
+    old_total=$(echo "$procstat" | awk '{print ($2+$3+$4+$5+$6+$7)}')
+    old_work=$(echo "$procstat" | awk '{print ($2+$3+$4)}')
+
+    sleep $interval
+
+    procstat=$(grep 'cpu ' /proc/stat)
+    new_total=$(echo "$procstat" | awk '{print ($2+$3+$4+$5+$6+$7)}')
+    new_work=$(echo "$procstat" | awk '{print ($2+$3+$4)}')
+
+    status=$(echo | awk "{print int(($new_work-$old_work)/($new_total-$old_total)*100)}")
+
+    echo "$icon_cpu${status}%"
+    #echo ""
+    #echo "#FFFFFF"
+done

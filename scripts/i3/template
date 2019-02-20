@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+full_text 'full text here'
+
+short_text 'short here'
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+# Uncomment to exit with urgent status
+#urgent

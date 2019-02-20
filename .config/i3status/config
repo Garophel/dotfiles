@@ -6,23 +6,31 @@ general {
 }
 
 order += "disk /"
-order += "wireless wls1"
-order += "ethernet enp0s25"
+order += "volume master"
+order += "wireless wlp3s0"
+# order += "ethernet enp0s25"
 order += "battery 0"
 order += "cpu_temperature 0"
-order += "load"
+# order += "load"
+order += "cpu_usage"
 order += "tztime local"
 
-wireless wls1 {
+volume master {
+       format = "VOL: %volume"
+       format_muted = "VOL: muted"
+       device = "pulse"
+}
+
+wireless wlp3s0 {
         #format_up = "W: (%quality at %essid, %bitrate) %ip"
-        format_up = "W: (%quality at %essid) %ip"
+        format_up = "W: %quality %essid (%ip)"
         format_down = "W: down"
 }
 
-ethernet enp0s25 {
-        format_up = "E: %ip (%speed)"
-        format_down = "E: down"
-}
+#ethernet enp0s25 {
+#        format_up = "E: %ip (%speed)"
+#        format_down = "E: down"
+#}
 
 battery 0 {
         #format = "%status %percentage %remaining %emptytime"
@@ -42,14 +50,20 @@ tztime local {
         format = "%d.%m.%Y %H:%M:%S"
 }
 
-load {
-        format = "%1min"
+#load {
+#        format = "%1min"
+#}
+
+cpu_usage {
+        format = "CPU: %usage"
+        format_above_threshold = "CPU(!): %usage"
+        max_threshold = 75
 }
 
 cpu_temperature 0 {
         format = "T: %degrees °C"
         max_threshold = 70
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp2_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input"
 }
 
 disk "/" {

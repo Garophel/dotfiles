@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+disk=/
+icon_disk=💾
+
+status=$(df -h $disk | sed 1d | awk '{print $4}' | sed 's/G/GB/')
+
+full_text "$icon_disk$status"
+
+short_text ''
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+# Uncomment to exit with urgent status
+#urgent

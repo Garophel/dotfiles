@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) ~/scripts/bin/i3launch.sh st -e newsboat ;;
+    2) true ;;
+    3) true ;; # maybe list top titles as notification
+    4) true ;;
+    5) true ;;
+esac
+
+full_text "📰$(newsboat -x print-unread | cut -d' ' -f1)"
+
+#short_text ''
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+# Uncomment to exit with urgent status
+#urgent

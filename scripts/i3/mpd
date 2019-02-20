@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Fetches 'full_text', 'short_text', 'color' and 'urgent'
+source ~/scripts/i3/base
+
+case $BLOCK_BUTTON in
+    1) true ;;
+    2) true ;;
+    3) true ;;
+    4) true ;;
+    5) true ;;
+esac
+
+icon_paused=
+icon_playing=
+icon_stopped=
+
+status=$(mpc)
+if [ "$(echo "$status" | wc -l)" -eq 3 ]; then
+    title=$(echo "$status" | sed 1q | sed 's/&/&amp;/g')
+    prepend=$(echo "$status" | sed -n 2p | awk '{print $1,$3}' | sed -e "s/\[paused\]/$icon_paused/" -e "s/\[playing\]/$icon_playing/" -e "s/\[stopped\]/$icon_stopped/")
+    full_text "$prepend $title"
+    short_text "$prepend"
+else
+    full_text "$icon_stopped -playback stopped-"
+fi
+
+# Note: auto-prepends '#'
+color 'FFFFFF'
+
+# Uncomment to exit with urgent status
+#urgent
