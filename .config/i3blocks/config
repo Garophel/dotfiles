@@ -24,6 +24,10 @@ signal=1
 command=~/scripts/i3/newsboat
 interval=60
 
+[pacman_updates]
+command=~/scripts/i3/pacman_updates
+interval=60
+
 [disk_usage]
 command=~/scripts/i3/disk_usage
 interval=60
@@ -53,6 +57,10 @@ interval=60
 
 [time]
 command=date +🕑%T
+
+[layout]
+command=~/scripts/i3/layout
+signal=3
 
 #[test]
 #command=echo '<span foreground="red">😃 </span>'

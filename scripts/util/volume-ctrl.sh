@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pasink=0
+
 usage() {
     echo "$0 <command>"
     echo '        up'
@@ -13,8 +15,6 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-pasink=0
-
 case "$1" in
     up)
         pactl set-sink-mute $pasink false
@@ -26,6 +26,9 @@ case "$1" in
         ;;
     mute)
         pactl set-sink-mute $pasink toggle
+        ;;
+    set-mute)
+        pactl set-sink-mute $pasink 1
         ;;
 esac
 

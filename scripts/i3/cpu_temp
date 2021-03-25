@@ -17,8 +17,7 @@ icon_temp=🌡️
 
 status=$(sensors | awk '/^Package id 0:/{print substr($4,2)}')
 full_text "$icon_temp$status"
-
-#short_text 'short here'
+short_text "$icon_temp$status"
 
 # Note: auto-prepends '#'
 color 'FFFFFF'

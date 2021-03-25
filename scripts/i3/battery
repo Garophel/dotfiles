@@ -15,14 +15,18 @@ icon_discharging=🔋
 icon_charging=🔌
 icon_full=⚡
 
-status=$(acpi | sed s/,//g \
-        | awk '{print toupper(substr($3,0,3)) $4}' \
-        | sed -e s/UNK/$icon_full/ \
-              -e s/CHA/$icon_charging/ \
-              -e s/DIS/$icon_discharging/ \
-              -e s/FUL/$icon_full/)
+status=$(acpi | sed -e 's/battery /B/i' \
+                    -e 's/:\( ...\).[a-zA-Z]*, /\1/' \
+                    -e 's/%.*/%/' \
+                    -e '$! s/$/ | /' \
+                    -e s/Unk/$icon_full/ \
+                    -e s/Cha/$icon_charging/ \
+                    -e s/Dis/$icon_discharging/ \
+                    -e s/Ful/$icon_full/ \
+                    | head -n 4 | tr -d '\n')
 
 full_text "$status"
+short_text "$status"
 
 #short_text 'short here'
 

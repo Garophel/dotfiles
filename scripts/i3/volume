@@ -20,14 +20,15 @@ icon_muted=🔇
 pasink2=$(( $pasink + 1 ))
 status=$(pactl list sinks | sed -n "/^Sink #$pasink/,/^Sink #$pasink2/{/Sink #$pasink2/!p}")
 
-volume=$(echo "$status" | grep '^\s\+Volume:' | sed 's/%//g' | awk '{print int(($5+$12)/2) "%"}')
-muted=$(echo "$status" | grep '^\s\+Mute:' | awk '{print $2}')
+volume=$(echo "$status" | grep '^\s\+Volume:' | sed 's/%//g' | awk '{print int(($5+$12)/2) "%"}' | head -n 1)
+muted=$(echo "$status" | grep '^\s\+Mute:' | awk '{print $2}' | head -n 1)
 
 if [ "$muted" = 'yes' ]; then
     full_text "${icon_muted}muted"
     short_text "${icon_muted}"
 else
     full_text "$icon_volume$volume"
+    short_text "$icon_volume$volume"
 fi
 
 # Note: auto-prepends '#'

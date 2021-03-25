@@ -3,14 +3,22 @@
 # A lot of this is 'borrowed' from Luke:
 # https://github.com/LukeSmithxyz/voidrice
 
-set $pasink 1
+#set $pasink 0
 set $mod Mod4
+set $alt Mod1
+
+#mouse_warping output
+mouse_warping none
 
 set $term --no-startup-id urxvt
 
 # Gaps for i3-gaps
 set $gaps_inner 10
 set $gaps_outer 25
+
+# Start with no gaps
+#gaps outer current set 0
+#gaps inner current set 0
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -46,6 +54,18 @@ for_window [title="ytcorner" class="mpv"] floating enable, \
 					  border pixel 1, \
 					  move position 1110 20
 
+# The russian keyboard layout image.
+no_focus [title="^feh.*rukb.png$"]
+for_window [title="^feh.*rukb.png$"] floating enable, \
+                                     sticky enable, \
+                                     border pixel 1, \
+                                     move position 0 20
+
+#bindsym $mod+F12 nop
+#bindcode $mod+96 exec --no-startup-id "bash -c pkill -f '^feh.*rukb.png$ || feh ~/uni/rukb.png"
+bindcode $mod+96 exec --no-startup-id bash -c "pkill -f '^feh.*rukb.png$' || feh ~/uni/rukb.png"
+
+
 #for_window [class="Gimp"] move workspace $ws5
 for_window [window_role="gimp-dock"] floating disable, \
                                      move left, \
@@ -75,7 +95,10 @@ gaps outer $gaps_outer
 exec --no-startup-id feh --bg-scale ~/.wallpaper/bg.png
 
 # Compton
-exec --no-startup-id compton -GC
+exec_always --no-startup-id compton -GC
+
+# Screen locking
+exec --no-startup-id xss-lock -l -- ~/scripts/screenlock.sh
 
 # Polybar (disabled, switched back to i3bar with i3blocks)
 #exec_always --no-startup-id ~/.config/polybar/launch.sh
@@ -92,12 +115,18 @@ exec --no-startup-id xmodmap ~/.Xmodmap
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+#$mod+Insert - cycle keymaps
+bindcode $mod+118            exec --no-startup-id sh -c 'FROM_I3=1 ~/scripts/bin/kbcycle.sh'
+
 #bindsym F1                   exec --no-startup-id echo "no help" > /dev/null
 
-bindsym $mod+Escape          exec --no-startup-id mupdf ~/uni/lukkari.pdf
-bindsym $mod+section         exec --no-startup-id ~/scripts/bin/matikka.sh
+# TODO: merge these into one via a menu
+#bindsym $mod+Escape          exec --no-startup-id mupdf ~/uni/lukkari.pdf
+#bindsym $mod+section         exec --no-startup-id ~/scripts/bin/matikka.sh
+bindsym $mod+Escape          sticky toggle
 
 bindsym $mod+Return          exec $term
+bindsym $alt+Return          exec $term
 bindsym $mod+Shift+Return    exec st -e ranger
 
 bindsym $mod+space           focus mode_toggle
@@ -115,13 +144,13 @@ bindsym $mod+Shift+v         mode "mkeys"
 bindsym $mod+b               exec --no-startup-id st -e newsboat
 bindsym $mod+Shift+b         exec --no-startup-id killall -SIGKILL qutebrowser
 
-bindsym $mod+p               exec --no-startup-id ~/scripts/bin/dmenu_plot.sh
-#bindsym $mod+Shift+p
+#bindsym $mod+p               exec --no-startup-id ~/scripts/bin/dmenu_plot.sh
+#bindsym $mod+Shift+p         exec --no-startup-id xdotool --window "%2" --clearmodifiers type LUL
 
-bindsym $mod+d               exec dmenu_run
+bindsym $mod+d               exec --no-startup-id dmenu_run
 #bindsym $mod+Shift+d
 
-#bindsym $mod+m               split h
+bindsym $mod+m               exec --no-startup-id ~/scripts/screensave.sh
 # bindsym $mod+Shift+m         workspace 1; exec --no-startup-id qutebrowser "http://pna.fi/tay"
 bindsym $mod+Shift+m         workspace 1; exec --no-startup-id surf "http://pna.fi/tay"
 
@@ -131,7 +160,7 @@ bindsym $mod+n               split toggle
 bindsym $mod+t               split toggle
 #bindsym $mod+Shift+t
 
-bindsym $mod+f               exec waterfox
+bindsym $mod+f               exec waterfox-classic
 bindsym $mod+Shift+f         fullscreen toggle
 
 #bindsym $mod+s               exec --no-startup-id ~/scripts/screenres.sh
@@ -158,34 +187,45 @@ bindsym $mod+Shift+r         restart
 bindsym $mod+e               exec --no-startup-id emacs
 bindsym $mod+Shift+e         exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym $mod+a               exec pavucontrol
+bindsym $mod+a               exec --no-startup-id pavucontrol
 bindsym $mod+Shift+a         exec --no-startup-id arandr
 
 bindsym $mod+g               gaps outer current set $gaps_outer; gaps inner current set $gaps_inner
 bindsym $mod+Shift+g         gaps outer current set 0; gaps inner current set 0
 
-bindsym $mod+s               gaps inner current plus 5
-bindsym $mod+Shift+s         gaps inner current minus 5
+# Disable gap adjustments since I'm not using them anyway
+bindsym $alt+q               gaps inner current plus 5
+bindsym $alt+Shift+q         gaps inner current minus 5
 
-bindsym $mod+z               gaps outer current plus 5
-bindsym $mod+Shift+z         gaps outer current minus 5
+bindsym $alt+w               gaps outer current plus 5
+bindsym $alt+Shift+w         gaps outer current minus 5
+
+bindsym $mod+Shift+s         exec --no-startup-id ~/scripts/bin/dmenu_screenlayout.sh
 
 bindsym $mod+i               exec qutebrowser
 bindsym $mod+Shift+i         resize shrink height 10 px or 10 ppt
 
-bindsym $mod+h               focus left
+#bindsym $mod+h               focus left
+bindcode $mod+43             focus left
 bindsym $mod+Shift+h         move left
+bindsym $alt+Shift+h         move workspace to output left
 
-bindsym $mod+j               focus down
+#bindsym $mod+j               focus down
+bindcode $mod+44             focus down
 bindsym $mod+Shift+j         move down
+bindsym $alt+Shift+j         move workspace to output down
 
-bindsym $mod+k               focus up
+#bindsym $mod+k               focus up
+bindcode $mod+45             focus up
 bindsym $mod+Shift+k         move up
+bindsym $alt+Shift+k         move workspace to output up
 
-bindsym $mod+l               focus right
+#bindsym $mod+l               focus right
+bindcode $mod+46             focus right
 bindsym $mod+Shift+l         move right
+bindsym $alt+Shift+l         move workspace to output right
 
-#bindsym $mod+y
+bindsym $mod+y               exec --no-startup-id bash ~/scripts/langdoc.sh
 bindsym $mod+Shift+y         resize shrink width 10 px or 10 ppt
 
 bindsym $mod+u               [instance="dropdown"] \
@@ -208,7 +248,8 @@ bindsym $mod+Prior           exec --no-startup-id ~/scripts/util/player-ctrl.sh 
 bindsym $mod+Next            exec --no-startup-id ~/scripts/util/player-ctrl.sh vol-down
 
 bindsym Print                exec --no-startup-id scrot --silent '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
-bindsym Shift+Print          exec --no-startup-id scrot --silent --select '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
+#bindsym Shift+Print          exec --no-startup-id scrot --silent --select '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
+bindsym $mod+Print           exec --no-startup-id spectacle
 #bindsym Print                exec "bash ~/scripts/screenshot.sh"
 #bindsym Shift+Print          exec "bash ~/scripts/screenshot-reg.sh"
 
@@ -217,11 +258,19 @@ bindsym $mod+Down            focus down
 bindsym $mod+Up              focus up
 bindsym $mod+Right           focus right
 
+# Keybinds for switching to the previous and next workspaces
 bindsym $mod+XF86Back        workspace prev
 bindsym $mod+XF86Forward     workspace next
-bindsym $mod+Tab             workspace back_and_forth
+bindsym $mod+$alt+Left       workspace prev
+bindsym $mod+$alt+Right      workspace next
+bindsym $mod+$alt+h          workspace prev
+bindsym $mod+$alt+l          workspace next
 
-bindsym XF86ScreenSaver      exec i3lock -c 333355
+#bindsym $mod+Tab             workspace back_and_forth
+bindcode $mod+23             workspace back_and_forth
+bindsym Control+$alt+Tab     workspace back_and_forth
+
+bindsym XF86ScreenSaver      exec --no-startup-id ~/scripts/screenlock.sh
 #bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink +5%"
 #bindsym XF86AudioLowerVolume exec --no-startup-id "pactl set-sink-mute $pasink false ; pactl set-sink-volume $pasink -5%"
 #bindsym XF86AudioMute        exec --no-startup-id "pactl set-sink-mute $pasink toggle"
@@ -299,6 +348,11 @@ mode "mkeys" {
     bindsym Shift+k exec --no-startup-id ~/scripts/mouse-keys.sh jmp_up
     bindsym Shift+l exec --no-startup-id ~/scripts/mouse-keys.sh jmp_right
 
+    bindsym h exec --no-startup-id ~/scripts/mouse-keys.sh jmp_left
+    bindsym j exec --no-startup-id ~/scripts/mouse-keys.sh jmp_down
+    bindsym k exec --no-startup-id ~/scripts/mouse-keys.sh jmp_up
+    bindsym l exec --no-startup-id ~/scripts/mouse-keys.sh jmp_right
+
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -318,4 +372,6 @@ bar {
     position top
     status_command i3blocks
     i3bar_command i3bar -t
+    #output primary
+    tray_output primary
 }

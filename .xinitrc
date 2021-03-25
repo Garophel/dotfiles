@@ -32,12 +32,36 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+[ -f ~/.xprofile ] && . ~/.xprofile
+
 #twm &
 #xclock -geometry 50x50-1+1 &
 #xterm -geometry 80x50+494+51 &
 #xterm -geometry 80x20+494-0 &
 #exec xterm -geometry 80x66+0+0 -name login
 
-setxkbmap -layout fi -model thinkpad
+dunst &
+nm-applet &
+feh --bg-scale ~/.wallpaper/bg.png &
+trayer \
+    --edge top \
+    --align right \
+    --widthtype pixel \
+    --width 80 \
+    --transparent true \
+    --padding 6 \
+    --tint 0x220000 \
+    --alpha 56 \
+    --monitor "primary" \
+    --SetDockType true \
+    --SetPartialStrut true \
+    --expand true \
+    --height 21 &
 
-exec i3
+compton -GC &
+
+setxkbmap -option caps:escape -layout fi -model thinkpad
+
+exec xmonad
+#exec i3
+#exec dwm > ~/.dwm.log

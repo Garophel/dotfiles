@@ -3,12 +3,14 @@
 # Fetches 'full_text', 'short_text', 'color' and 'urgent'
 source ~/scripts/i3/base
 
+export FROM_I3=1
+
 case $BLOCK_BUTTON in
-    1) true ;;
+    1) bash ~/scripts/util/player-ctrl.sh toggle > /dev/null ;;
     2) true ;;
     3) true ;;
-    4) true ;;
-    5) true ;;
+    4) bash ~/scripts/util/player-ctrl.sh prev > /dev/null ;;
+    5) bash ~/scripts/util/player-ctrl.sh next > /dev/null ;;
 esac
 
 icon_paused=
@@ -22,7 +24,7 @@ if [ "$(echo "$status" | wc -l)" -eq 3 ]; then
     full_text "$prepend $title"
     short_text "$prepend"
 else
-    full_text "$icon_stopped -playback stopped-"
+    full_text "$icon_stopped [playback stopped]"
 fi
 
 # Note: auto-prepends '#'

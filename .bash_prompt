@@ -13,7 +13,7 @@ function getgitbranch {
 	# https://coderwall.com/p/fasnya/add-git-branch-name-to-bash-prompt
 	NCH=`git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'`
 
-	if [ -z $NCH ]; then
+	if [ -z "$NCH" ]; then
 		echo -n ''
 	else
 		echo -n "$NCH"

@@ -1,10 +1,13 @@
 execute pathogen#infect()
 
-"filetype plugin on
-"runtime macros/matchit.vim
+filetype plugin on
+runtime macros/matchit.vim
 
 "	map leader to space
 let mapleader = " "
+
+"       use system clipboard the default register
+set clipboard=unnamedplus
 
 source ~/.vim-au.vim
 
@@ -15,6 +18,7 @@ set wildmenu
 set path+=**
 set nocompatible
 set incsearch
+set wrapscan
 
 "	disable the in-the-face startup screen
 set shortmess+=I
@@ -32,7 +36,7 @@ set backspace=indent,eol,start
 set ts=4
 set softtabstop=0
 set shiftwidth=4
-set noet
+set et
 set nosta
 
 "	regular nice-to-have settings
@@ -42,7 +46,7 @@ set relativenumber
 
 "	visuals
 set gfn=Consolas:h10:cANSI:qDRAFT
-colorscheme torte
+colorscheme desert
 hi Normal ctermbg=NONE
 
 "	mappings

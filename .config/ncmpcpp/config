@@ -1,3 +1,4 @@
+mpd_music_dir = ~/Music
 visualizer_output_name = toggle_visualizer
 visualizer_type = wave_filled
 visualizer_in_stereo = yes
@@ -5,4 +6,8 @@ visualizer_sync_interval = 10
 
 playlist_disable_highlight_delay = 0
 
+mouse_list_scroll_whole_page = no
 centered_cursor = yes
+lines_scrolled = 10
+
+seek_time = 10

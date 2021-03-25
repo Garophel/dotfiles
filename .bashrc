@@ -34,22 +34,9 @@ alias lock='i3lock -c 333355'
 alias sshagent='eval `ssh-agent`'
 alias btoff='sudo rfkill block bluetooth'
 alias htmlpreview='w3m -T text/html'
+alias hostdir='python2 -m SimpleHTTPServer 9090'
 
-alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-
-function setbg {
-	if [ -z $1 ]; then
-		echo 'No image given, resetting the current background'
-		feh --bg-scale ~/.wallpaper/bg.png
-	else
-		mv ~/.wallpaper/bg.png ~/.wallpaper/bg.png.old
-		cp "$1" ~/.wallpaper/bg.png
-		if ! feh --bg-scale ~/.wallpaper/bg.png; then
-			mv ~/.wallpaper/bg.png.old ~/.wallpaper/bg.png
-			feh --bg-scale ~/.wallpaper/bg.png
-		fi
-	fi
-}
+alias dotf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
 function img {
 	feh -g 640x480 -d "$1"

@@ -4,14 +4,20 @@
 source ~/scripts/i3/base
 
 case $BLOCK_BUTTON in
-    1) ~/scripts/bin/i3launch.sh st -e newsboat ;;
+    1) ~/scripts/bin/i3launch.sh urxvt -e newsboat ;;
     2) true ;;
     3) true ;; # maybe list top titles as notification
     4) true ;;
     5) true ;;
 esac
 
-full_text "📰$(newsboat -x print-unread | cut -d' ' -f1)"
+NEWS_COUNT=$(newsboat -x print-unread | cut -d' ' -f1)
+
+if [ "$NEWS_COUNT" -gt 0 ]; then
+    full_text "📰$NEWS_COUNT"
+else
+    full_text ""
+fi
 
 #short_text ''
 

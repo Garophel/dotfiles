@@ -94,12 +94,24 @@
   (if (null (buffer-file-name)) nil
     (member (file-name-extension (buffer-file-name)) exts)))
 
+(add-hook 'tex-mode-hook
+          (lambda () (progn
+                  (when (my/buffer-extension-in '("tex"))
+                    (setq-local indent-tabs-mode nil)
+                    (add-hook 'after-save-hook 'my/doc-compile nil t))
+                  (visual-line-mode))))
+
 (add-hook 'markdown-mode-hook
           (lambda () (progn
                   (when (my/buffer-extension-in '("Rmd" "md"))
                     (setq-local indent-tabs-mode nil)
                     (add-hook 'after-save-hook 'my/doc-compile nil t))
                   (visual-line-mode))))
+
+(add-hook 'web-mode-hook
+          (lambda () (progn
+                  (when (my/buffer-extension-in html-extensions)
+                    (add-hook 'after-save-hook 'my/html-preview-update nil t)))))
 
 ;(add-hook 'multi-web-mode-hook
 ;          (lambda () (progn
@@ -142,6 +154,10 @@
 (define-key evil-normal-state-map (kbd "<C-return>") 'ibuffer)
 
 ;(evil-ex-define-cmd "q[uit]" (lambda () (kill-buffer (current-buffer))))
+
+;For mutt configuration
+(use-package mutt-mode
+  :ensure t)
 
 (use-package php-mode
   :ensure t)
@@ -216,47 +232,50 @@
     (company-emacs-eclim-setup)))
 
 ;; "vim-like" tabs
-(use-package elscreen
-  :ensure t
-  :init
-  (elscreen-start)
-  (define-key evil-normal-state-map (kbd "C-w t") 'elscreen-create) ;create tab
-  (define-key evil-normal-state-map (kbd "C-w x") 'elscreen-kill)   ;kill tab
-  (add-hook 'after-init-hook (lambda () (let (i) (dotimes (i 3 nil) (elscreen-create))) (elscreen-goto 0))))
+;(use-package elscreen
+;  :ensure t
+;  :init
+;  (elscreen-start)
+;  (define-key evil-normal-state-map (kbd "C-w t") 'elscreen-create) ;create tab
+;  (define-key evil-normal-state-map (kbd "C-w x") 'elscreen-kill)   ;kill tab
+;  (add-hook 'after-init-hook (lambda () (let (i) (dotimes (i 3 nil) (elscreen-create))) (elscreen-goto 0))))
 
-(require 'elscreen)
-(defun my/jump-or-prev-tab (arg)
-  "Jump to elscreen specified by ARG or previous if none."
-  (interactive "P")
-  (if (null arg)
-      (elscreen-previous)
-    (elscreen-goto arg)))
-
-(defun my/jump-or-next-tab (arg)
-  "Jump to elscreen specified by ARG or next if none."
-  (interactive "P")
-  (if (null arg)
-      (elscreen-next)
-    (elscreen-goto arg)))
-
-(defun my/dired-in-new-tab ()
-  "Open dired in new tab."
-  (interactive)
-  (elscreen-create)
-  (dired "~/"))
-
-(global-set-key (kbd "C-c k") 'my/jump-or-prev-tab)          ;previous tab
-(global-set-key (kbd "C-c j") 'my/jump-or-next-tab)          ;next tab
-(global-set-key (kbd "C-c f") 'my/dired-in-new-tab)          ;find file in tab
-(global-set-key (kbd "C-c t") 'elscreen-create)              ;create tab
-(global-set-key (kbd "C-c x") 'elscreen-kill)                ;kill tab
-(define-key evil-normal-state-map "gT" 'my/jump-or-prev-tab) ;previous tab
-(define-key evil-normal-state-map "gt" 'my/jump-or-next-tab) ;next tab
+;(require 'elscreen)
+;(defun my/jump-or-prev-tab (arg)
+;  "Jump to elscreen specified by ARG or previous if none."
+;  (interactive "P")
+;  (if (null arg)
+;      (elscreen-previous)
+;    (elscreen-goto arg)))
+;
+;(defun my/jump-or-next-tab (arg)
+;  "Jump to elscreen specified by ARG or next if none."
+;  (interactive "P")
+;  (if (null arg)
+;      (elscreen-next)
+;    (elscreen-goto arg)))
+;
+;(defun my/dired-in-new-tab ()
+;  "Open dired in new tab."
+;  (interactive)
+;  (elscreen-create)
+;  (dired "~/"))
+;
+;(global-set-key (kbd "C-c k") 'my/jump-or-prev-tab)          ;previous tab
+;(global-set-key (kbd "C-c j") 'my/jump-or-next-tab)          ;next tab
+;(global-set-key (kbd "C-c f") 'my/dired-in-new-tab)          ;find file in tab
+;(global-set-key (kbd "C-c t") 'elscreen-create)              ;create tab
+;(global-set-key (kbd "C-c x") 'elscreen-kill)                ;kill tab
+;(define-key evil-normal-state-map "gT" 'my/jump-or-prev-tab) ;previous tab
+;(define-key evil-normal-state-map "gt" 'my/jump-or-next-tab) ;next tab
 
 (use-package evil-surround
   :ensure t
   :init
   (global-evil-surround-mode 1))
+
+(use-package evil-textobj-line
+  :ensure t)
 
 (use-package evil-commentary
   :ensure t
@@ -327,9 +346,18 @@
   :init
   (add-hook 'after-init-hook 'global-company-mode))
 
+(use-package haskell-mode
+  :ensure t)
+
+(use-package elixir-mode
+  :ensure t)
+
 (use-package rust-mode
   :ensure t
   :mode "\\.rs\\'")
+
+(use-package erlang
+  :ensure t)
 
 (use-package csharp-mode
   :ensure t
@@ -357,6 +385,9 @@
 (use-package racer
   :ensure t
   :config
+  (setq racer-command-timeout 10)
+  (setq racer-cmd "~/.cargo/bin/racer-cmd")
+  (setq racer-cargo-home "~/.cargo")
   (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
   :init
   (require 'rust-mode)
@@ -385,7 +416,16 @@
   :config
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  :init
+  (add-hook 'irony-mode-hook (lambda ()
+                               (setq company-idle-delay nil)
+                               (define-key irony-mode-map (kbd "TAB") #'company-indent-or-complete-common))))
+
+(use-package irony-eldoc
+  :ensure t
+  :init
+  (add-hook 'irony-mode-hook #'irony-eldoc))
 
 (use-package spaceline
   :ensure t
@@ -539,18 +579,18 @@
   (interactive)
   (when
       (and
-       (my/buffer-extension-in '("Rmd"))
+       (my/buffer-extension-in '("Rmd" "tex"))
        (file-exists-p (concat default-directory "Makefile")))
     (start-process "make knit" nil "make" "knit"))
   (when
       (my/buffer-extension-in '("md"))
-    (start-process "pandoc" nil "pandoc" "-s" (concat (file-name-base) ".md") "-o" (concat (file-name-base) ".pdf")))
+    (start-process "pandoc" nil "pandoc" "-V" "mainfont=Noto Sans" "--pdf-engine=xelatex" "-s" (concat (file-name-base) ".md") "-o" (concat (file-name-base) ".pdf")))
   nil)
 
 (defun my/doc-preview ()
   "Launch preview of the document being edited (if any)."
   (interactive)
-  (when (and (my/buffer-extension-in '("Rmd"))
+  (when (and (my/buffer-extension-in '("Rmd" "tex"))
              (file-exists-p (concat default-directory "Makefile")))
     (start-process "make preview" nil "make" "preview"))
   (when (my/buffer-extension-in '("md"))
@@ -613,24 +653,22 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
-   (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+   '("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
  '(elscreen-display-screen-number t)
  '(elscreen-display-tab t)
  '(elscreen-tab-display-control nil)
  '(elscreen-tab-display-kill-screen nil)
  '(linum-relative-format "%3s ")
  '(package-selected-packages
-   (quote
-    (avy-menu php-mode wcheck-mode markdown-mode csharp-mode projectile avy company-emacs-eclim eclim lsp-rust rust-mode company-lsp flycheck elscreen company-irony evil-matchit evil-args evil-commentary linum-relative evil-surround diminish company spaceline rainbow-delimiters rainbow-delimeters dashboard rainbow-mode spacemacs-theme which-key use-package))))
+   '(erlang haskell-mode elixir-mode mutt-mode evil-textobj-line irony-eldoc avy-menu php-mode wcheck-mode markdown-mode csharp-mode projectile avy company-emacs-eclim eclim lsp-rust rust-mode company-lsp flycheck elscreen company-irony evil-matchit evil-args evil-commentary linum-relative evil-surround diminish company spaceline rainbow-delimiters rainbow-delimeters dashboard rainbow-mode spacemacs-theme which-key use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "SRC" :family "Hack"))))
+ '(default ((t (:inherit nil :stipple nil :background "#292b2e" :foreground "#b2b2b2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 103 :width normal :foundry "SRC" :family "Hack"))))
  '(elscreen-tab-background-face ((t (:background "#2A2A31"))))
  '(elscreen-tab-control-face ((t (:background "#5A4F76" :foreground "black"))))
  '(elscreen-tab-current-screen-face ((t (:background "#CAAFFF" :foreground "black"))))

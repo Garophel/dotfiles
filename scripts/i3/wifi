@@ -20,11 +20,14 @@ if [ "$(cat /sys/class/net/w*/operstate)" = 'up' ]; then
     wdev=$(nmcli device | awk '/wifi/{print $1}' | sed 1q)
     ip=$(ip addr | sed -n "/$wdev/,/^[0-9]\+:/p" | awk '/inet /{print $2}' | cut -d/ -f1)
 
-    full_text "$icon_wifi$quality $ssid ($ip)"
+    #full_text "$icon_wifi$quality $ssid ($ip)"
+    full_text "$icon_wifi$quality $ssid"
 
-    short_text "$icon_wifi$quality ($ip)"
+    #short_text "$icon_wifi$quality ($ip)"
+    short_text "$icon_wifi$quality"
 else
-    full_text "$icon_wifi$icon_nowifi"
+    # full_text "$icon_wifi$icon_nowifi"
+    full_text ""
 fi
 
 # Note: auto-prepends '#'

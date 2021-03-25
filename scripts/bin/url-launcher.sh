@@ -29,7 +29,7 @@ case "$prog" in
         $i3launch mpv "$1"
         ;;
     'mpv (ytcorner)')
-        $i3launch mpv --title 'ytcorner' "$1"
+        $i3launch mpv "--title ytcorner --ytdl-format=worst $1"
         ;;
 	'mpv (audio-only)')
 		$i3launch mpv --vid=no "$1"

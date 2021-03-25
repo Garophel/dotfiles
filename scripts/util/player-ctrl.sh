@@ -40,4 +40,5 @@ case "$1" in
         ;;
 esac
 
-pkill -RTMIN+2 i3blocks
+# Do not signal i3blocks to refresh if this script has been called from there.
+[ -z "$FROM_I3" ] && pkill -RTMIN+2 i3blocks

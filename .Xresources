@@ -27,7 +27,7 @@ URxvt*color0: gray15
 URxvt*color1: red3
 URxvt*color2: green3
 URxvt*color3: yellow3
-URxvt*color4: blue2
+URxvt*color4: cyan4
 URxvt*color5: magenta3
 URxvt*color6: cyan3
 URxvt*color7: gray90
@@ -40,3 +40,5 @@ URxvt*color13: magenta
 URxvt*color14: cyan
 URxvt*color15: white
 
+Sxiv.foreground: white
+Sxiv.background: black
