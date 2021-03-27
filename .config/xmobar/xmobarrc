@@ -1,12 +1,12 @@
---Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
-Config { font = "xft:Hack:style=Regular:pixelsize=13:hinting=true"
+Config { font = "xft:Hack:style=Regular:pixelsize=13:hinting=true,Noto Color Emoji:pixelsize=12"
        , additionalFonts = []
        , borderColor = "black"
        , border = TopB
        , bgColor = "#221100"
        , fgColor = "#ffffff"
        , alpha = 200
-       , position = TopP 0 80
+       --, position = TopP 0 80
+       , position = Top
        , textOffset = -1
        , iconOffset = -1
        , lowerOnStart = True
@@ -17,25 +17,14 @@ Config { font = "xft:Hack:style=Regular:pixelsize=13:hinting=true"
        , allDesktops = True
        , overrideRedirect = True
        , commands = [
-                    -- Run Weather "EGPF" ["-t","<station>: <tempC>C",
-                    --                     "-L","18","-H","25",
-                    --                     "--normal","green",
-                    --                     "--high","red",
-                    --                     "--low","lightblue"] 36000
-                    -- Run Network "enp0s25" ["-L","0","-H","32",
-                    --                        "--normal","green","--high","red"] 10
-                    -- , Run Network "eth1" ["-L","0","-H","32",
-                    --                       "--normal","green","--high","red"] 10
-                       Run Cpu ["-L","3","-H","50",
+                         Run Cpu ["-t","<total>%","-L","3","-H","50",
                                   "--normal","green","--high","red"] 10
-                       , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    --   , Run Swap [] 10
-                       , Run Com "uname" ["-s","-r"] "" 36000
-                       , Run Date "%-d.%-m.%Y %H:%M:%S" "date" 10
+                       , Run Memory ["-t","<usedratio>%"] 10
+                       , Run Date "📅%-d.%-m.%Y 🕑%H:%M:%S" "date" 10
+                       , Run Com "/home/okka/scripts/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
                        , Run UnsafeStdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%UnsafeStdinReader% }{ %memory% | %cpu% | %date%"
-       --, template = "%UnsafeStdinReader% }{ %memory% | %cpu% | <fc=#ee9a00>%date%</fc>"
+       , template = "%UnsafeStdinReader% }{ 🧠%memory% | 📊%cpu% | %date% %trayerpad%"
        }

@@ -46,17 +46,18 @@ feh --bg-scale ~/.wallpaper/bg.png &
 trayer \
     --edge top \
     --align right \
-    --widthtype pixel \
+    --widthtype request \
     --width 80 \
     --transparent true \
     --padding 6 \
-    --tint 0x220000 \
     --alpha 56 \
+    --tint 0x220011 \
     --monitor "primary" \
     --SetDockType true \
     --SetPartialStrut true \
     --expand true \
     --height 21 &
+
 
 compton -GC &
 
