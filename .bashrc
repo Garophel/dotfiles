@@ -73,3 +73,4 @@ function mpdoff {
 
 # enable vi-input mode
 set -o vi
+source "$HOME/.cargo/env"

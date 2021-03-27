@@ -40,29 +40,31 @@ fi
 #xterm -geometry 80x20+494-0 &
 #exec xterm -geometry 80x66+0+0 -name login
 
-dunst &
-nm-applet &
-feh --bg-scale ~/.wallpaper/bg.png &
-trayer \
-    --edge top \
-    --align right \
-    --widthtype request \
-    --width 80 \
-    --transparent true \
-    --padding 6 \
-    --alpha 56 \
-    --tint 0x220011 \
-    --monitor "primary" \
-    --SetDockType true \
-    --SetPartialStrut true \
-    --expand true \
-    --height 21 &
+wm=xmonad
 
+if [ "$wm" = 'xmonad' ]; then
+    dunst &
+    nm-applet &
+    feh --bg-scale ~/.wallpaper/bg.png &
+    compton -GC &
+    trayer \
+        --edge top \
+        --align right \
+        --widthtype request \
+        --width 80 \
+        --transparent true \
+        --padding 6 \
+        --alpha 56 \
+        --tint 0x220011 \
+        --monitor "primary" \
+        --SetDockType true \
+        --SetPartialStrut true \
+        --expand true \
+        --height 21 &
+fi
 
-compton -GC &
+setxkbmap -option caps:escape -layout 'fi' -model thinkpad
 
-setxkbmap -option caps:escape -layout fi -model thinkpad
-
-exec xmonad
+exec $wm
 #exec i3
 #exec dwm > ~/.dwm.log

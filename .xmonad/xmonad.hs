@@ -125,7 +125,7 @@ myKeys = \conf -> mkKeymap conf $
     ++
     [("M-" ++ m ++ (show n), windows $ f i)
         | (i, n) <- zip (XMonad.workspaces conf) ([1..9] ++ [0])
-        , (f, m) <- [(W.greedyView, ""), (W.shift, "S-")]]
+        , (f, m) <- [(W.view, ""), (W.shift, "S-")]]
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events

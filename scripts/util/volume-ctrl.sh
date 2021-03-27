@@ -17,18 +17,24 @@ fi
 
 case "$1" in
     up)
-        pactl set-sink-mute $pasink false
-        pactl set-sink-volume $pasink +5%
+        #pactl set-sink-mute $pasink false
+        #pactl set-sink-volume $pasink +5%
+        ponymix unmute >/dev/null
+        ponymix increase 5 >/dev/null
         ;;
     down)
-        pactl set-sink-mute $pasink false
-        pactl set-sink-volume $pasink -5%
+        #pactl set-sink-mute $pasink false
+        #pactl set-sink-volume $pasink -5%
+        ponymix unmute >/dev/null
+        ponymix decrease 5 >/dev/null
         ;;
     mute)
-        pactl set-sink-mute $pasink toggle
+        #pactl set-sink-mute $pasink toggle
+        ponymix toggle >/dev/null
         ;;
     set-mute)
-        pactl set-sink-mute $pasink 1
+        #pactl set-sink-mute $pasink 1
+        ponymix mute >/dev/null
         ;;
 esac
 

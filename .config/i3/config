@@ -10,7 +10,7 @@ set $alt Mod1
 #mouse_warping output
 mouse_warping none
 
-set $term --no-startup-id urxvt
+set $term --no-startup-id termite
 
 # Gaps for i3-gaps
 set $gaps_inner 10
@@ -26,7 +26,7 @@ set $gaps_outer 25
 font pango:Hack 10
 
 # Disable window titles
-for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border pixel 2
 
 # class                 border  backgr. text    indicator child_border
 client.focused          #4c7899 #285577 #ffffff #ff00ff   #ff0000
@@ -160,7 +160,7 @@ bindsym $mod+n               split toggle
 bindsym $mod+t               split toggle
 #bindsym $mod+Shift+t
 
-bindsym $mod+f               exec waterfox-classic
+bindsym $mod+f               exec --no-startup-id firefox
 bindsym $mod+Shift+f         fullscreen toggle
 
 #bindsym $mod+s               exec --no-startup-id ~/scripts/screenres.sh
@@ -247,9 +247,9 @@ bindsym $mod+period          [instance="math"] \
 bindsym $mod+Prior           exec --no-startup-id ~/scripts/util/player-ctrl.sh vol-up
 bindsym $mod+Next            exec --no-startup-id ~/scripts/util/player-ctrl.sh vol-down
 
+bindsym $mod+Print           exec --no-startup-id spectacle
 bindsym Print                exec --no-startup-id scrot --silent '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
 #bindsym Shift+Print          exec --no-startup-id scrot --silent --select '%Y.%m.%d_%H.%M.%S.png' -e 'mv $f ~/pics/screenshots/'
-bindsym $mod+Print           exec --no-startup-id spectacle
 #bindsym Print                exec "bash ~/scripts/screenshot.sh"
 #bindsym Shift+Print          exec "bash ~/scripts/screenshot-reg.sh"
 
@@ -368,7 +368,7 @@ bar {
         urgent_workspace   #ff0000 #9f5f00ff #ff0000
     }
 
-    font pango:monospace 9
+    font pango:monospace 12
     position top
     status_command i3blocks
     i3bar_command i3bar -t
